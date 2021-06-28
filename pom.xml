@@ -28,7 +28,7 @@
 
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>plugin</artifactId>
-  <version>4.8-SNAPSHOT</version>
+  <version>4.20-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Jenkins Plugin Parent POM</name>
@@ -53,9 +53,9 @@
     <jenkins.version>2.204</jenkins.version>
     <jenkins-bom.version>${jenkins.version}</jenkins-bom.version>
 
-    <jenkins-test-harness.version>2.67</jenkins-test-harness.version>
+    <jenkins-test-harness.version>1589.vc23fca066d5c</jenkins-test-harness.version>
 
-    <hpi-plugin.version>3.15</hpi-plugin.version>
+    <hpi-plugin.version>3.17</hpi-plugin.version>
     <stapler-plugin.version>1.17</stapler-plugin.version>
     <java.level>you-must-override-the-java.level-property</java.level>
     <!-- Change this property if you need your tests to be compiled with a different Java level than the plugin. -->
@@ -77,7 +77,7 @@
     <node.version>4.0.0</node.version>
     <npm.version>2.13.1</npm.version>
     <yarn.version>0.23.0</yarn.version>
-    <frontend-version>1.10.0</frontend-version>
+    <frontend-version>1.12.0</frontend-version>
     <skip.node.tests /> <!-- changed by -DskipTests, if specified - see profile -->
     <skip.node.lint /> <!-- changed by -DskipLint, if specified - see profile -->
     <npm.loglevel /> <!-- may use e.g. -\-silent (without backslash) -->
@@ -85,12 +85,9 @@
     <!-- To skip the wizard by default in hpi:run. It should not impact other goals. -->
     <hudson.Main.development>true</hudson.Main.development>
 
-    <access-modifier.version>1.16</access-modifier.version>
-    <!-- May be used to select timestamped snapshots: -->
-    <access-modifier-annotation.version>${access-modifier.version}</access-modifier-annotation.version>
-    <access-modifier-checker.version>${access-modifier.version}</access-modifier-checker.version>
-    <animal.sniffer.version>1.19</animal.sniffer.version>
-    <powermock.version>2.0.7</powermock.version>
+    <access-modifier-checker.version>1.21</access-modifier-checker.version>
+    <animal.sniffer.version>1.20</animal.sniffer.version>
+    <powermock.version>2.0.9</powermock.version>
 
     <!-- To opt in to @Restricted(Beta.class) APIs, set to true: -->
     <useBeta>false</useBeta>
@@ -98,6 +95,9 @@
     <scmTag>HEAD</scmTag>
     <!-- Where to put temporary files during test runs. -->
     <surefireTempDir>${project.build.directory}/tmp</surefireTempDir>
+
+    <!-- Generate metadata for reflection on method parameters -->
+    <maven.compiler.parameters>true</maven.compiler.parameters>
   </properties>
 
   <dependencyManagement>
@@ -134,7 +134,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.13</version>
+        <version>4.13.2</version>
       </dependency>
       <!-- JTN tidy this up? -->
       <dependency> <!-- used in JTH and jenkins core > 2.x -->
@@ -156,7 +156,7 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>3.5.11</version>
+        <version>3.11.2</version>
       </dependency>
       <dependency>
         <groupId>org.powermock</groupId>
@@ -171,7 +171,7 @@
       <dependency>
         <groupId>org.objenesis</groupId>
         <artifactId>objenesis</artifactId>
-        <version>3.1</version>
+        <version>3.2</version>
       </dependency>
       <dependency>
         <groupId>org.hamcrest</groupId>
@@ -283,7 +283,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
@@ -315,13 +315,15 @@
         </plugin>
         <plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
           <configuration>
             <source>${java.level}</source>
             <quiet>true</quiet>
             <links>
               <link>https://javadoc.jenkins.io/</link>
             </links>
+            <doclint>all,-missing</doclint>
+            <locale>en_US</locale>
           </configuration>
         </plugin>
         <plugin>
@@ -334,7 +336,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.1.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
@@ -362,7 +364,7 @@
         <plugin>
           <groupId>org.codehaus.gmavenplus</groupId>
           <artifactId>gmavenplus-plugin</artifactId>
-          <version>1.10.1</version>
+          <version>1.12.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -386,7 +388,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.6</version>
+          <version>0.8.7</version>
         </plugin>
         <plugin>
           <groupId>org.kohsuke.stapler</groupId>
@@ -405,8 +407,8 @@
         </plugin>
         <plugin>
           <groupId>org.jvnet.localizer</groupId>
-          <artifactId>maven-localizer-plugin</artifactId>
-          <version>1.26</version>
+          <artifactId>localizer-maven-plugin</artifactId>
+          <version>1.31</version>
         </plugin>
         <plugin>
           <groupId>org.kohsuke</groupId>
@@ -416,7 +418,7 @@
         <plugin>
           <groupId>com.cloudbees</groupId>
           <artifactId>maven-license-plugin</artifactId>
-          <version>1.8</version>
+          <version>1.9</version>
         </plugin>
         <plugin> <!-- not gated by Incrementals profiles, since we want the incrementalify goal to be available from the start -->
           <groupId>io.jenkins.tools.incrementals</groupId>
@@ -434,7 +436,7 @@
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.0.4</version>
+          <version>4.2.3</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -658,12 +660,12 @@
           <preparationGoals>clean install</preparationGoals>
           <goals>deploy</goals>
           <arguments>${arguments}</arguments>
-          <releaseProfiles>jenkins-release,${releaseProfiles}</releaseProfiles>
+          <releaseProfiles>jenkins-release,!consume-incrementals,${releaseProfiles}</releaseProfiles>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.jvnet.localizer</groupId>
-        <artifactId>maven-localizer-plugin</artifactId>
+        <artifactId>localizer-maven-plugin</artifactId>
         <executions>
           <execution>
             <goals>
@@ -828,7 +830,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-invoker-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.2</version>
         <inherited>false</inherited>
         <executions>
           <execution>
@@ -1290,7 +1292,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>flatten-maven-plugin</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.7</version>
             <configuration>
               <updatePomFile>true</updatePomFile>
             </configuration>
@@ -1391,6 +1393,24 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile> <!-- JEP-229 -->
+      <id>block-MRP</id>
+      <activation>
+        <property>
+          <name>changelist.format</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-release-plugin</artifactId>
+            <configuration>
+              <preparationGoals>not-set-up-for-MRP</preparationGoals>
+            </configuration>
           </plugin>
         </plugins>
       </build>
